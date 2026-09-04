@@ -84,7 +84,7 @@ counts, and episode rewards.
 
 ### Main gameplay
 
-**[ADD SCREENSHOT HERE — `assets/main.png`]**
+![NeuroDrift main gameplay](assets/main.png)
 
 Show the manual driving / normal gameplay view with the car, track, sensors,
 and HUD.
