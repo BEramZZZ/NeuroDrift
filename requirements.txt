@@ -1,5 +1,8 @@
-pygame
-neat-python
-numpy
-gymnasium
-stable-baselines3
+neat-python 
+gymnasium 
+stable-baselines3 
+pygame 
+numpy 
+tqdm 
+rich 
+tensorboard
