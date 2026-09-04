@@ -11,7 +11,7 @@ control task.
 
 > 📸 **Main gameplay screenshot**
 >
-> **[ADD SCREENSHOT HERE — `assets/main.png`]**
+> ![NeuroDrift main gameplay](assets/main.png)
 >
 > Show the car, track, HUD, and preferably the five raycast sensors.
 
@@ -70,14 +70,14 @@ ends (crash, prolonged lack of progress, or a time limit of 1,800 frames /
 
 ### NEAT training
 
-**[ADD SCREENSHOT HERE — `assets/neat_training.png`]**
+![NEAT training](assets/neat_training.png)
 
 Show the full NEAT training window with multiple cars on the track and the
 leader's neural-network visualization.
 
 ### PPO training
 
-**[ADD SCREENSHOT HERE — `assets/ppo_training.png`]**
+![PPO training](assets/ppo_training.png)
 
 Show the PPO training grid with the parallel environments, cars, checkpoint
 counts, and episode rewards.
