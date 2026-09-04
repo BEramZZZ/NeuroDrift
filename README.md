@@ -1,11 +1,34 @@
-# NeuroDrift
+# NeuroDrift 🏎️🧠
 
-A top-down racing simulation comparing two fundamentally different
-approaches to teaching an agent to drive: **neuroevolution (NEAT)** and
-**reinforcement learning (PPO)**. Both agents learn on identical physics,
-the same track, and the same sensor input — only the learning method
-differs, making this a direct, controlled comparison between evolutionary
-and gradient-based approaches to a continuous control task.
+A top-down racing simulation comparing two fundamentally different approaches
+to teaching an agent to drive: **neuroevolution (NEAT)** and
+**reinforcement learning (PPO)**.
+
+Both agents learn on identical physics, the same track, and the same sensor
+input — only the learning method differs, making this a direct, controlled
+comparison between evolutionary and gradient-based approaches to a continuous
+control task.
+
+> 📸 **Main gameplay screenshot**
+>
+> **[ADD SCREENSHOT HERE — `assets/main.png`]**
+>
+> Show the car, track, HUD, and preferably the five raycast sensors.
+
+---
+
+## Highlights
+
+- 🧬 **NEAT** — evolves neural networks and their topologies
+- 🤖 **PPO** — trains a policy with reinforcement learning
+- 🏎️ Continuous steering and throttle control
+- 📡 Five raycast sensors + normalized speed
+- ⚡ Vectorized collision detection and raycasting with NumPy
+- 📊 Live visualization during both training methods
+- 🔬 Controlled comparison between evolutionary and gradient-based learning
+- 🎯 PPO reward-hacking case study
+
+---
 
 ## How it works
 
@@ -36,58 +59,179 @@ ends (crash, prolonged lack of progress, or a time limit of 1,800 frames /
   (`checkpoints_passed * 1000 + total_distance * 0.1`), and the fittest
   genomes are selected, mutated, and recombined to produce the next
   generation. No gradients, no reward shaping — just selection pressure.
-
 - **PPO** (`rl_mode/`) trains a single policy network via reinforcement
   learning, receiving a shaped reward signal on every simulation step
   (Stable-Baselines3's PPO implementation, on a custom Gymnasium
   environment).
 
+---
+
+## Training visualizations
+
+### NEAT training
+
+**[ADD SCREENSHOT HERE — `assets/neat_training.png`]**
+
+Show the full NEAT training window with multiple cars on the track and the
+leader's neural-network visualization.
+
+### PPO training
+
+**[ADD SCREENSHOT HERE — `assets/ppo_training.png`]**
+
+Show the PPO training grid with the parallel environments, cars, checkpoint
+counts, and episode rewards.
+
+### Main gameplay
+
+**[ADD SCREENSHOT HERE — `assets/main.png`]**
+
+Show the manual driving / normal gameplay view with the car, track, sensors,
+and HUD.
+
+> **Tip:** PNG screenshots work well here. If you later record training
+> sessions, these placeholders can also be replaced with GIFs.
+
+---
+
 ## Project structure
 
+```text
+NeuroDrift/
+├── assets/
+│   └── track1.json
+├── env/
+│   ├── car.py
+│   ├── raycast.py
+│   └── track.py
+├── render/
+├── neat_mode/
+│   ├── neat-config.txt
+│   ├── fitness.py
+│   ├── population_runner.py
+│   ├── render_brain.py
+│   └── train_neat.py
+├── rl_mode/
+│   ├── race_env.py
+│   ├── live_render.py
+│   └── train_rl.py
+├── Main.py
+├── play_neat.py
+├── play_rl.py
+├── requirements.txt
+├── .gitignore
+└── README.md
 ```
-env/                    Car physics (bicycle model), track geometry,
-                         vectorized collision/checkpoint detection, vectorized raycasting
-render/                 Rendering (camera modes, track, car, HUD)
-neat_mode/
-  neat-config.txt         NEAT hyperparameters (population, mutation, speciation)
-  fitness.py               CarStats tracking + compute_fitness() + is_stuck()
-  population_runner.py     Steps a whole generation, live-renders the population + leader's brain
-  render_brain.py          Live network diagram (nodes colored by activation, edges by weight)
-  train_neat.py            Entry point — runs NEAT for 300 generations, saves the best genome
-rl_mode/
-  race_env.py              Gymnasium environment wrapping the same car/track/raycast sim
-  live_render.py           Renders all N parallel training envs in a grid during training
-  train_rl.py              Entry point — trains PPO for 2M timesteps
-assets/                  Track definitions (JSON: walls, checkpoints, spawn point)
-Main.py                  Manual driving mode (arrow keys)
-play_neat.py             Watch a trained NEAT genome drive (--genome, --track)
-play_rl.py               Watch a trained PPO model drive (--model, --track)
-```
+
+- `env/` — Car physics (bicycle model), track geometry, vectorized
+  collision/checkpoint detection, and vectorized raycasting
+- `render/` — Rendering (camera modes, track, car, HUD)
+- `neat_mode/` — NEAT configuration, fitness, population runner, brain
+  visualization, and training
+- `rl_mode/` — Gymnasium environment, parallel rendering, and PPO training
+- `assets/` — Track definitions (JSON: walls, checkpoints, spawn point)
+- `Main.py` — Manual driving mode
+- `play_neat.py` — Watch a trained NEAT genome drive
+- `play_rl.py` — Watch a trained PPO model drive
+
+---
 
 ## Installation
 
+Create and activate a virtual environment:
+
 ```bash
 python -m venv venv
-source venv/bin/activate        # or venv\Scripts\activate on Windows
-pip install neat-python gymnasium stable-baselines3 pygame numpy tqdm rich tensorboard
 ```
+
+### Windows
+
+```bash
+venv\Scripts\activate
+```
+
+### Linux / macOS
+
+```bash
+source venv/bin/activate
+```
+
+Install the project dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+---
 
 ## Usage
 
-```bash
-python Main.py                          # drive manually (arrow keys, R to restart after a crash)
-python -m neat_mode.train_neat          # train NEAT (renders the whole population + leader's brain live)
-python play_neat.py                     # watch the best saved NEAT genome (R to respawn)
-python play_neat.py --genome <path.pkl> --track <path.json>
+### Manual driving
 
-python -m rl_mode.train_rl              # train PPO (renders a live grid of all parallel envs)
-python play_rl.py                       # watch the trained PPO model (R to respawn)
+```bash
+python Main.py
+```
+
+Drive manually with the arrow keys. Press `R` to restart after a crash.
+
+### Train NEAT
+
+```bash
+python -m neat_mode.train_neat
+```
+
+This trains NEAT for up to 300 generations while rendering the population
+and the leader's neural network live.
+
+### Watch a trained NEAT genome
+
+```bash
+python play_neat.py
+```
+
+Or specify a genome and track:
+
+```bash
+python play_neat.py --genome <path.pkl> --track <path.json>
+```
+
+### Train PPO
+
+```bash
+python -m rl_mode.train_rl
+```
+
+This trains PPO for 2M timesteps while rendering the parallel environments.
+
+### Watch a trained PPO model
+
+```bash
+python play_rl.py
+```
+
+Or specify a model and track:
+
+```bash
 python play_rl.py --model <path.zip> --track <path.json>
 ```
 
 Run training/playback scripts as modules (`python -m package.script`) from
 the project root rather than as standalone files, so their internal package
 imports resolve correctly.
+
+---
+
+## Controls
+
+| Key | Action              |
+| --- | ------------------- |
+| ↑   | Accelerate          |
+| ↓   | Brake / reverse     |
+| ←   | Steer left          |
+| →   | Steer right         |
+| R   | Restart after crash |
+
+---
 
 ## The two methods, briefly
 
@@ -112,20 +256,24 @@ continuously within one network's lifetime — but everything it learns is
 only as good as the reward function it's handed, which is exactly what
 the case study below runs into.
 
+---
+
 ## NEAT configuration
 
 Population of 60 genomes per generation, run for up to 300 generations
 (`neat_mode/neat-config.txt`, `train_neat.py`). Networks start fully
 connected with no hidden nodes (`initial_connection = full_direct`) and
-grow structure over time via `node_add_prob = 0.3` / `conn_add_prob =
-0.5`, balanced against `node_delete_prob = 0.2` / `conn_delete_prob =
-0.3`. Weight and bias mutation rates are high (0.8 / 0.7) with a
+grow structure over time via `node_add_prob = 0.3` / `conn_add_prob = 0.5`,
+balanced against `node_delete_prob = 0.2` / `conn_delete_prob = 0.3`.
+Weight and bias mutation rates are high (0.8 / 0.7) with a
 mutate-power of 0.5, so most generations perturb existing connections
 rather than growing the network. Genomes are grouped into species by
-topological/weight similarity (`compatibility_threshold = 3.0`), each
+topological/weight similarity (`compatibility_threshold = 3.0), each
 species is protected from extinction for up to 20 stagnant generations,
 and the top `survival_threshold = 0.2` of each species reproduces, with
 2 elite genomes carried over unchanged each generation.
+
+---
 
 ## PPO configuration
 
@@ -138,6 +286,8 @@ default continuous-control hyperparameters: `n_steps=2048`,
 the policy exploring instead of collapsing onto "always drive straight"
 early on. A `CheckpointCallback` saves a model snapshot roughly every
 50,000 timesteps.
+
+---
 
 ## Live visualization
 
@@ -152,6 +302,8 @@ decision in real time. PPO's `live_render.py` instead tiles all 8
 parallel training environments into a grid with each car's checkpoint
 count and running episode reward overlaid, the closest RL equivalent of
 watching a NEAT population race together.
+
+---
 
 ## Results
 
@@ -175,10 +327,10 @@ underlying objective.
 
 **Iteration 1 — the exploit.** With the initial reward structure:
 
-| Event                              | Reward                            |
-| ---------------------------------- | --------------------------------- |
-| Crash                              | −10                               |
-| Stuck (no progress for 300 frames) | −5                                |
+| Event                              |                            Reward |
+| ---------------------------------- | --------------------------------: |
+| Crash                              |                               −10 |
+| Stuck (no progress for 300 frames) |                                −5 |
 | Idle time                          | ≈0 (negligible per-frame penalty) |
 
 the agent converged on stopping before difficult corners rather than
@@ -203,45 +355,46 @@ stopped before ever reaching the corner.
 penalty to match the crash penalty and increased the idle-time penalty
 5x:
 
-| Event     | Reward         |
-| --------- | -------------- |
-| Crash     | −10            |
-| Stuck     | −10            |
+| Event     |         Reward |
+| --------- | -------------: |
+| Crash     |            −10 |
+| Stuck     |            −10 |
 | Idle time | −0.005 / frame |
 
 This removed the idling exploit but introduced a different problem: over a
 full 1,800-frame episode, the time penalty alone totals −9.0 — nearly as
 costly as an entire checkpoint (+10). Survival itself became expensive,
-with nothing strong enough counterbalancing it. The result: `ep_len_mean`
-converged to almost exactly 302 frames — just past the 300-frame
-stuck-timeout — meaning nearly every episode across the entire 2M-step run
-ended in a stall, not a successful run. `ep_rew_mean` settled at 4.75.
+with nothing strong enough counterbalancing it. The result:
+`ep_len_mean` converged to almost exactly 302 frames — just past the
+300-frame stuck-timeout — meaning nearly every episode across the entire
+2M-step run ended in a stall, not a successful run. `ep_rew_mean` settled
+at 4.75.
 
-**Iteration 3 — the fix.** The fix wasn't a bigger penalty, and it wasn't a
-new reward term either — it was scaling the existing pieces sensibly. The
-environment already shapes reward continuously via progress toward the
-next checkpoint (`(prev_distance - new_distance) * PROGRESS_REWARD_SCALE`
+**Iteration 3 — the fix.** The fix wasn't a bigger penalty, and it wasn't
+a new reward term either — it was scaling the existing pieces sensibly.
+The environment already shapes reward continuously via progress toward
+the next checkpoint (`(prev_distance - new_distance) * PROGRESS_REWARD_SCALE`
 every frame, see `race_env.py`), but that signal had been getting drowned
 out by a time penalty large enough to rival an entire checkpoint. Pulling
 the time penalty back to a more modest level let the progress-shaping term
 actually do its job as the counterbalance to idling/stalling, instead of
 competing against an oversized penalty:
 
-| Constant                | Iteration 2                                           | Iteration 3                                |
-| ----------------------- | ----------------------------------------------------- | ------------------------------------------ |
-| `CRASH_PENALTY`         | −10                                                   | −10                                        |
-| `STUCK_PENALTY`         | −10 (unchanged — matching crash was correct)          | −10                                        |
-| `TIME_PENALTY`          | −0.005 / frame (−9.0 over a full episode)             | −0.0015 / frame (−2.7 over a full episode) |
-| `PROGRESS_REWARD_SCALE` | 0.01 (unchanged, but overwhelmed by the time penalty) | 0.01                                       |
+| Constant                |                               Iteration 2 |                                Iteration 3 |
+| ----------------------- | ----------------------------------------: | -----------------------------------------: |
+| `CRASH_PENALTY`         |                                       −10 |                                        −10 |
+| `STUCK_PENALTY`         |                                       −10 |                                        −10 |
+| `TIME_PENALTY`          | −0.005 / frame (−9.0 over a full episode) | −0.0015 / frame (−2.7 over a full episode) |
+| `PROGRESS_REWARD_SCALE` |                                      0.01 |                                       0.01 |
 
 This produced a clear, unambiguous improvement:
 
 | Metric               | Iteration 2 | Iteration 3 |
-| -------------------- | ----------- | ----------- |
-| `ep_len_mean`        | 302         | 1,280       |
-| `ep_rew_mean`        | 4.75        | 883         |
-| `std` (action noise) | 1.76        | 0.662       |
-| `explained_variance` | 0.401       | 0.699       |
+| -------------------- | ----------: | ----------: |
+| `ep_len_mean`        |         302 |       1,280 |
+| `ep_rew_mean`        |        4.75 |         883 |
+| `std` (action noise) |        1.76 |       0.662 |
+| `explained_variance` |       0.401 |       0.699 |
 
 Episodes now run most of their full length instead of dying near the
 stuck-timeout, the policy is far more decisive (lower action noise), and
@@ -255,6 +408,8 @@ Penalizing failure alone doesn't reliably produce good behavior — it can
 just as easily produce risk-avoidance strategies, and even a well-intentioned
 fix can overcorrect if a penalty is scaled without checking it against the
 magnitude of the rewards it's meant to compete with.
+
+---
 
 ## Author
 
